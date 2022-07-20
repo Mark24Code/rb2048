@@ -10,24 +10,6 @@ module Rb2048
 end
 
 module Rb2048
-  class Pos
-    attr :id,:x,:y,:value
-    def initialize(size, x,y,value)
-      @id = size * x + y
-      @x = (x <= size -1 && x >= 0) ? x : rise_error('Pos: x out of bounds ( 0 <= x <= size - 1)')
-      @y = (y <= size -1 && y >= 0) ? y : rise_error('Pos: y out of bounds ( 0 <= y <= size - 1)')
-      @value = value % 2 == 0 ? value : rise_error('Pos: need `even number`')
-    end
-
-    def rise_error(msg)
-      throw ::Rb2048::InvalidValue, msg
-    end
-
-    def inspect
-      return "<Pos @id=#{@id} @x=#{@x} @y=#{@y} @value=#{@value}>"
-    end
-  end
-
 
   class GameBoard
     attr :elements
@@ -43,7 +25,6 @@ module Rb2048
       zero_value_count = total_count - init_value_count
 
       values = []
-
       for i in (0..init_value_count-1)
         values.push(2 ** rand(1..4))
       end
@@ -62,17 +43,11 @@ module Rb2048
       for i in (0..max_nums)
         row = []
         for j in (0..max_nums)
-          # row.push(Pos.new(@size, i,j,pos_values[i*@size+j]))
           row.push(pos_values[i*@size+j])
         end
         @elements.push(row)
       end
-
       @elements
-    end
-
-    def pick(x,y)
-      @elements[x][y]
     end
 
     def bigger_then_zero(arr)
@@ -99,7 +74,6 @@ module Rb2048
 
     
     def up_merge
-      
       for col_index in (0..@size-1)
         col = []
         for row_index in (0..@size-1)
@@ -178,24 +152,32 @@ module Rb2048
       return result
     end
 
-    def zero_array(len)
+    def create_zero_array(len)
       Array.new(len,0)
     end
 
     def update_line(arr)
       size = arr.length
       compact = merge(bigger_then_zero(arr))
-      compact.concat(zero_array(size - compact.length))      
+      compact.concat(create_zero_array(size - compact.length))      
     end
 
-    def draw
-      puts '-'*(@elements.length*4+10)
+    def render
+      data = []
+
       for i in (0..@elements.length-1)
+        row = []
         for j in (0..@elements.length-1)
-          printf "#{@elements[i][j]} \t"
+          row.push(@elements[i][j])
         end
-        printf "\n"
+        data.push(row)
       end
+
+      return {
+        data: data,
+        size: @size,
+        level: @level
+      }
     end
   end
 
@@ -205,8 +187,9 @@ module Rb2048
       @g = ::Rb2048::GameBoard.new
       @g.create_elements
     end
+
     def run
-      @g.draw
+      redraw
       while true
          command = gets.chomp
          dispatch(command)
@@ -234,20 +217,26 @@ module Rb2048
 
     def action(direction)
       @g.__send__("#{direction}_merge")
-      @g.draw
+      redraw
+    end
+
+    def redraw
+      system('clear')
+      resp = @g.render
+      data = resp[:data]
+      size = resp[:size]
+
+      puts '-'*(size*4+10)
+      for i in (0..size-1)
+        for j in (0..size-1)
+          printf "#{data[i][j]} \t"
+        end
+        printf "\n"
+      end
     end
   end
 end
 
 
-# p g.left_merge
-# p g.right_merge
-# p g.up_merge
-
 game = ::Rb2048::Game.new
-
 game.run
-# # game.action("left")
-# # game.action("right")
-# # game.action("up")
-# game.action("down")
