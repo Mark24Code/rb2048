@@ -256,7 +256,7 @@ module Rb2048
         size: @size,
         level: @level,
         score: @score,
-        start_timer: @start_timestamp,
+        start_timestamp: @start_timestamp,
         end_timestamp: @end_timestamp,
         status: @status,
         tun_new_value: tun_new_value
