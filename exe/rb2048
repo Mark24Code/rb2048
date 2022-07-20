@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/rb2048"
+
+Rb2048::Game.new.run
