@@ -2,6 +2,10 @@
 
 Ruby 2048 Game
 
+## Environment
+
+* Ruby3 have tested.
+
 ## Install
 
 `gem install rb2048`
@@ -11,7 +15,7 @@ Ruby 2048 Game
 ```
 Usage: rb2048 [options]
         --version                    verison
-        --size SIZE                  Size of board: 4~10
+        --size SIZE                  Size of board: 4-10
         --level LEVEL                Hard Level 2-5
 ```
 ## Game Screen
@@ -36,6 +40,14 @@ Usage: rb2048 [options]
 
  Control: W(↑) A(←) S(↓) D(→) Q(quit) R(Restart)
 ```
+
+## Game Model Lightspot
+
+Not just a main thread to create TUI Game.
+
+This is a experiment for just testing Ruby3 Thread & Queue.
+
+I build this game that UserI/O, Data Computing, TUI Render use 3 different threads & message channel to work together.
 
 ## Contributing
 

@@ -15,7 +15,7 @@ OptionParser.new do |opts|
     return
   end
 
-  opts.on("--size SIZE", Integer, "Size of board: 4~10") do |size|
+  opts.on("--size SIZE", Integer, "Size of board: 4-10") do |size|
     if size < 4
       puts "--size too small,it should in [4,10].Then will use size=4 as default"
       sleep 1
