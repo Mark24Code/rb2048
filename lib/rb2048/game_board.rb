@@ -2,7 +2,7 @@ require_relative './logger'
 
 module Rb2048
   class GameBoard
-    attr :elements
+    attr :elements, :status
     def initialize(size=4, level = 2,win_standard=2048)
       @size = size
       @elements = []
@@ -168,8 +168,6 @@ module Rb2048
         break if before == result
       end
 
-      collect_max_score(result)
-
       return result
     end
 
@@ -180,6 +178,7 @@ module Rb2048
     def update_line(arr)
       size = arr.length
       compact = merge(bigger_then_zero(arr))
+      collect_max_score(compact)
       compact.concat(create_zero_array(size - compact.length))
     end
 
@@ -187,40 +186,47 @@ module Rb2048
       @start_timestamp = Time.now.to_i
     end
 
-    def close_tiemr
+    def close_timer
       @end_timestamp = Time.now.to_i
+    end
+
+    def check_dead_road
+      dead_road = @size * 2
+
+      for row_index in (0..@size-1)
+        row = @elements[row_index]
+        before = bigger_then_zero(row).clone
+        after = merge(before)
+        if before == after
+          dead_road -= 1
+        end
+      end
+
+      for col_index in (0..@size-1)
+        col = []
+        for row_index in (0..@size-1)
+          col.push(@elements[row_index][col_index])
+        end
+
+        before = bigger_then_zero(col).clone
+        after = merge(before)
+        if before == after
+          dead_road -= 1
+        end
+      end
+
+      dead_road
     end
 
     def check_game_status
       if @score >= @win_standard
         return @status = 1
       else
-        # check  x、y direction，lengt == uniq.length
-        # check x
-        dead_road = @size * 2
-
-        for row_index in (0..@size-1)
-          row = @elements[row_index]
-          compact = bigger_then_zero(row)
-          if compact.length == compact.uniq.length
-            dead_road -= 1
+        if all_zero_pos.length == 0
+          dead_road = check_dead_road
+          if dead_road <= 0
+            @status = -1
           end
-        end
-
-        for col_index in (0..@size-1)
-          col = []
-          for row_index in (0..@size-1)
-            col.push(@elements[col_index][row_index])
-          end
-
-          compact = bigger_then_zero(col)
-          if compact.length > 0 && compact.length == compact.uniq.length
-            dead_road -= 1
-          end
-        end
-
-        if dead_road == 0
-          @status = -1
         end
       end
     end

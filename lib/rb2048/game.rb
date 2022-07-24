@@ -184,7 +184,7 @@ module Rb2048
 
       # status
 
-      row = row + 1
+      row = row + 2
       @window.setpos(row, col)
       result_text = nil
       if status == 1
@@ -192,7 +192,12 @@ module Rb2048
       elsif status == -1
         result_text = "YOU LOST :("
       end
-      @window.addstr(result_text)
+
+      if result_text
+        left_offset = (buffer.first.length - result_text.length )/2
+        @window.setpos(row, left_offset)
+        @window.addstr(result_text)
+      end
 
       # control
       row = row + 2

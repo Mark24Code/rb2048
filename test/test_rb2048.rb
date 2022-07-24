@@ -36,4 +36,19 @@ class GameBoard < Minitest::Test
     assert_equal r3, [2,32,2]
   end
 
+  def test_check_game_status
+    data = [
+      16, 8, 32, 4,
+      8, 2, 4, 32,
+      2, 64, 16, 4,
+      16, 2, 8, 2]
+
+    g = ::Rb2048::GameBoard.new
+    g.create_elements(data)
+
+    g.check_game_status
+    status = g.status
+    assert_equal -1, status
+    
+  end
 end
