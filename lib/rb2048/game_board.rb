@@ -14,6 +14,7 @@ module Rb2048
       @status = 0 # -1 lost, 0 init/running, 1 win
       @win_standard = win_standard
 
+      @last_action = nil
       @logger = LoggerMan
     end
 
@@ -59,6 +60,7 @@ module Rb2048
         update_row = update_line(row)
         @elements[row_index] = update_row
       end
+      @last_action = :LEFT
       @elements
     end
 
@@ -69,6 +71,7 @@ module Rb2048
         update_row = update_line(row.reverse)
         @elements[row_index] = update_row.reverse
       end
+      @last_action = :RIGHT
       @elements
     end
 
@@ -86,6 +89,7 @@ module Rb2048
           @elements[row_index][col_index] = update_col[row_index]
         end
       end
+      @last_action = :UP
       @elements
     end
 
@@ -103,6 +107,8 @@ module Rb2048
           @elements[row_index][col_index] = update_col[row_index]
         end
       end
+      @last_action = :DOWN
+      @elements
     end
 
     def merge_once(arr)
@@ -268,6 +274,7 @@ module Rb2048
         size: @size,
         level: @level,
         score: @score,
+        last_action: @last_action,
         start_timestamp: @start_timestamp,
         end_timestamp: @end_timestamp,
         status: @status,

@@ -124,6 +124,7 @@ module Rb2048
 
       level = payload[:level]
       score = payload[:score]
+      last_action = payload[:last_action]
       status = payload[:status]
 
       start_timestamp = payload[:start_timestamp]
@@ -132,21 +133,35 @@ module Rb2048
       tun_new_value = payload[:tun_new_value]
 
       @window.clear
-      # puts '-'*(size*4+10)
-      # puts "score:#{resp[:score]}"
-      # puts "status:#{resp[:status]}"
-      # puts '-'*(size*4+10)
 
+      # display board content buffer
       buffer = []
+      number_width = score.to_s.length * 2
       for row_index in (0..size-1)
         row_text = "|"
         for col_index in (0..size-1)
-          row_text +=" "*2+"#{data[row_index][col_index]}"+" "*2+"|"
+
+          n = data[row_index][col_index]
+          n_text = " "*(number_width - n.to_s.length) + n.to_s
+          row_text +=" "*2+"#{n_text}"+" "*2+"|"
         end
         buffer.push(row_text)
       end
 
-      start_row, start_col = [1,1]
+      # x,y offset counter
+      row,col = [0,1]
+
+      # title
+      content_width = buffer.first.length
+      title = "-- Ruby 2048 --"
+      left_offset = (content_width - title.length) / 2
+      row = row + 1
+      @window.setpos(row, left_offset)
+      @window.addstr("-- Ruby 2048 --")
+
+      # board
+      row = row + 2
+      start_row, start_col = [row,1]
       @window.setpos(start_row, start_col)
       @window.addstr("-"*buffer.first.length)
       buffer.each_with_index do |line,index|
@@ -156,6 +171,27 @@ module Rb2048
         @window.addstr(line)
       end
 
+      # score
+      row = row + buffer.length * 2 + 2
+      @window.setpos(row, col)
+      @window.addstr("Score:\t#{score}\t\t#{"You:"+last_action.to_s if last_action}")
+
+      # status
+
+      row = row + 1
+      @window.setpos(row, col)
+      result_text = nil
+      if status == 1
+        result_text = "Congratulation! You have got 2048!!! :D"
+      elsif status == -1
+        result_text = "YOU LOST :("
+      end
+      @window.addstr(result_text)
+
+      # control
+      row = row + 2
+      @window.setpos(row, col)
+      @window.addstr("Control: W(↑) A(←) S(↓) D(→) Q(quit) R(Restart)")
       @window.refresh
     end
   end
