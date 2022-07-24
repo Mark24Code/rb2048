@@ -16,6 +16,6 @@ class Logger
   end
 end
 
-LoggerMan = Logger.new(:on)
+LoggerMan = Logger.new(:off)
 
 at_exit { LoggerMan.close }

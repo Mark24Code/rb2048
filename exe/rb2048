@@ -1,5 +1,45 @@
 #!/usr/bin/env ruby
-
+require 'optparse'
 require_relative "../lib/rb2048"
 
-::Rb2048::Game.new.run
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: rb2048 [options]"
+
+  opts.on("--version", "verison") do |v|
+    # optins[:verison] = v
+    puts "Ruby2048: v#{::Rb2048::VERSION}"
+    puts "author: Mark24"
+    puts "mail: mark.zhangyoung@qq.com"
+    puts "project: https://github.com/Mark24Code/rb2048"
+    return
+  end
+
+  opts.on("--size SIZE", Integer, "Size of board: 4~10") do |size|
+    if size < 4
+      puts "--size too small,it should in [4,10].Then will use size=4 as default"
+      sleep 1
+    elsif size > 10
+      puts "--size too small,it should in [4,10].It will use size=10."
+      sleep 1
+    end
+    options[:size] = size
+  end
+
+  opts.on("--level LEVEL", Integer, "Hard Level 2-5") do |level|
+    if level < 2
+      puts "--level too small,it should in [2,5].Then will use level=2 as default"
+      sleep 1
+    elsif level > 5
+      puts "--level too small,it should in [2,5].It will use size=5."
+      sleep 1
+    end
+    options[:level] = level
+  end
+
+end.parse!
+
+init_size = options[:size] || 4
+init_level = options[:level] || 2
+
+::Rb2048::Game.new(nil,init_size,init_level).run

@@ -1,38 +1,18 @@
 # Rb2048
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rb2048`. To experiment with that code, run `bin/console` for an interactive prompt.
+Ruby 2048 Game
 
-TODO: Delete this and the text above, and describe your gem
+## Help
 
-## Installation
+Usage: rb2048 [options]
+        --version                    verison
+        --size SIZE                  Size of board: 4~10
+        --level LEVEL                Hard Level 2-5
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'rb2048'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install rb2048
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rb2048.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Mark24Code/rb2048.
 
 ## License
 

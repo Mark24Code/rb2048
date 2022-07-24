@@ -14,8 +14,11 @@ module Rb2048
       printf "Goodbye :P \n"
     end
 
-    def initialize(init_elements = nil)
+    def initialize(init_elements = nil, size=4, level=2)
       @logger = LoggerMan
+      
+      @level = level
+      @size = size 
 
       @render = ::Rb2048::GameRender.new
       @window = @render.window
@@ -35,7 +38,7 @@ module Rb2048
     end
 
     def init_game(init_elements=nil)
-      @backend = ::Rb2048::GameBoard.new
+      @backend = ::Rb2048::GameBoard.new(@size,@level)
       @backend.create_elements(init_elements)
 
       @logger.log("INIT", "start")
