@@ -15,8 +15,7 @@ module Rb2048
     end
 
     def initialize(init_elements = nil)
-      @backend = ::Rb2048::GameBoard.new
-      @backend.create_elements(init_elements)
+      @logger = LoggerMan
 
       @render = ::Rb2048::GameRender.new
       @window = @render.window
@@ -26,8 +25,8 @@ module Rb2048
       @frame_delta = 1.0 / @refresh_rate
 
       @io_data_channel = Queue.new
-
-      @logger = LoggerMan
+      
+      init_game(init_elements)      
     end
 
     def run
@@ -35,7 +34,10 @@ module Rb2048
       main_loop
     end
 
-    def init_game
+    def init_game(init_elements=nil)
+      @backend = ::Rb2048::GameBoard.new
+      @backend.create_elements(init_elements)
+
       @logger.log("INIT", "start")
       @frame_data_channel << @backend.tun_result
     end
@@ -53,6 +55,8 @@ module Rb2048
         if command == :QUIT
           self.class.quit_game
           exit 0
+        elsif command == :RESTART
+          self.init_game
         else
           @backend.__send__("#{command.to_s.downcase}_merge")
           frame_data = @backend.tun_result
@@ -77,6 +81,8 @@ module Rb2048
           command =  :RIGHT
         elsif k ==  "q"
           command = :QUIT
+        elsif k == "r"
+          command = :RESTART
         else
         end
 
