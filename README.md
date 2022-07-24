@@ -2,13 +2,18 @@
 
 Ruby 2048 Game
 
+## Install
+
+`gem install rb2048`
+
 ## Help
 
+```
 Usage: rb2048 [options]
         --version                    verison
         --size SIZE                  Size of board: 4~10
         --level LEVEL                Hard Level 2-5
-
+```
 
 ## Contributing
 
