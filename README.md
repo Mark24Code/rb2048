@@ -2,9 +2,6 @@
 
 Ruby 2048 Game
 
-## Environment
-
-* Ruby3 have tested.
 
 ## Install
 
