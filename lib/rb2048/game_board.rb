@@ -1,3 +1,5 @@
+require_relative './logger'
+
 module Rb2048
   class GameBoard
     attr :elements
@@ -12,6 +14,7 @@ module Rb2048
       @status = 0 # -1 lost, 0 init/running, 1 win
       @win_standard = win_standard
 
+      @logger = LoggerMan
     end
 
     def create_init_value
@@ -23,7 +26,7 @@ module Rb2048
       for i in (0..init_value_count-1)
         values.push(rand_init)
       end
-      
+
       for i in (0..zero_value_count-1)
         values.push(0)
       end
@@ -50,6 +53,7 @@ module Rb2048
     end
 
     def left_merge
+      @logger.log("Left", @elements)
       for row_index in (0..@size-1)
         row = @elements[row_index]
         update_row = update_line(row)
@@ -59,6 +63,7 @@ module Rb2048
     end
 
     def right_merge
+      @logger.log("Right", @elements)
       for row_index in (0..@size-1)
         row = @elements[row_index]
         update_row = update_line(row.reverse)
@@ -67,8 +72,9 @@ module Rb2048
       @elements
     end
 
-    
+
     def up_merge
+      @logger.log("UP", @elements)
       for col_index in (0..@size-1)
         col = []
         for row_index in (0..@size-1)
@@ -84,6 +90,7 @@ module Rb2048
     end
 
     def down_merge
+      @logger.log("Down", @elements)
       for col_index in (0..@size-1)
         col = []
         for row_index in (0..@size-1)
@@ -100,7 +107,7 @@ module Rb2048
 
     def merge_once(arr)
 
-      if arr.length == 1
+      if arr.length <= 1
         return arr
       end
 
@@ -144,10 +151,15 @@ module Rb2048
     end
 
     def merge(arr)
-
+      if arr.length <= 0
+         return arr
+      end
       result = arr.clone
-      while result.length != result.uniq.length
+
+      while true
+        before = result.clone
         result = merge_once(result)
+        break if before == result
       end
 
       collect_max_score(result)
@@ -162,7 +174,7 @@ module Rb2048
     def update_line(arr)
       size = arr.length
       compact = merge(bigger_then_zero(arr))
-      compact.concat(create_zero_array(size - compact.length))      
+      compact.concat(create_zero_array(size - compact.length))
     end
 
     def start_timer
@@ -194,7 +206,7 @@ module Rb2048
           for row_index in (0..@size-1)
             col.push(@elements[col_index][row_index])
           end
-          
+
           compact = bigger_then_zero(col)
           if compact.length > 0 && compact.length == compact.uniq.length
             dead_road -= 1
@@ -241,7 +253,7 @@ module Rb2048
       tun_new_value = create_new_number
 
       check_game_status
-  
+
       data = []
       for i in (0..@elements.length-1)
         row = []

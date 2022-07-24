@@ -8,3 +8,5 @@
 /tmp/
 .idea
 .DS_Store
+*.log
+/log/

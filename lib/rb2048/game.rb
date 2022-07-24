@@ -1,6 +1,8 @@
 require "curses"
 require_relative './game_board'
 require "thread"
+require_relative './logger'
+
 
 trap("INT") { ::Rb2048::Game.quit_game; exit 0 }
 
@@ -24,6 +26,8 @@ module Rb2048
       @frame_delta = 1.0 / @refresh_rate
 
       @io_data_channel = Queue.new
+
+      @logger = LoggerMan
     end
 
     def run
@@ -32,6 +36,7 @@ module Rb2048
     end
 
     def init_game
+      @logger.log("INIT", "start")
       @frame_data_channel << @backend.tun_result
     end
 
@@ -76,7 +81,7 @@ module Rb2048
         end
 
         @io_data_channel << command if command
-        # sleep 0.08
+        sleep 0.08
       end
     end
 
@@ -84,7 +89,7 @@ module Rb2048
       while (frame_data = @frame_data_channel.shift)
         break if frame_data == :done
         @render.draw(frame_data) if frame_data
-        # sleep 0.16
+        sleep 0.16
       end
     end
   end
@@ -155,6 +160,3 @@ module Rb2048
     end
   end
 end
-
-
-::Rb2048::Game.new.run
